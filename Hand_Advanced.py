@@ -47,16 +47,22 @@ while True:
             # print(distance)
             # vol = np.interp(distance, [15,250], [volumeMin, volumeMax])
             vol = np.interp(distance, [15,250], [0, 100])
+            Bar = np.interp(distance , [15,250], [400,100])                                      # for volume bar
             filter = 5
             vol = filter * round(vol/filter)
 
 
             cv2.line(img, (thumb_x,thumb_y), (index_x,index_y), (0,255,255), 3)                     # draws line between index and thumb
+            cv2.rectangle(img, (50,100), (100,400), (255,255,0), 3)
+            # cv2.rectangle(img, (50, int(volBar)), (100,400), (255,255,0), cv2.FILLED)                     
             mp_drawing.draw_landmarks(img, hand_landmarks, mp_hands.HAND_CONNECTIONS)               # draws landmarks on hand when detected
 
             # volume.SetMasterVolumeLevel(vol,None)
             if pinky.x > pinky1.x:
                 volume.SetMasterVolumeLevelScalar(vol/100,None)
+                cv2.rectangle(img, (50, int(Bar)), (100,400), (255,255,0), cv2.FILLED)              # volume bar rectangle
+                cv2.putText(img, f'Volume: {vol}', (40,450), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 3)    
+    
     cv2.imshow("video", img)
     if cv2.waitKey(1) & 0xFF == ord('e'):
         break
